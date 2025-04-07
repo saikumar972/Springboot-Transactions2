@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/splunk
+    username: root
+    password: root123
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      format-sql: true
+      dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    org:
+      springframework:
+        transaction: DEBUG
+        orm:
+          jpa:
+            JpaTransactionManager: DEBUG
+      hibernate:
+        transaction: DEBUG
+
+
+
