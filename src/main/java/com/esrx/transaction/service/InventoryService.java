@@ -26,7 +26,7 @@ public class InventoryService {
     public Inventory findProductById(int id){
         return inventoryRepo.findById(id).orElseThrow(()->new IllegalArgumentException("Invalid product id"));
     }
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(propagation = Propagation.REQUIRED)
     public Inventory updateProduct(Inventory inventory){
         Inventory updatedInventory=findProductById(inventory.getId());
         updatedInventory.setPrice(inventory.getPrice());

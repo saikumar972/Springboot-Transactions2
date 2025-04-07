@@ -20,7 +20,11 @@ public class OrderService {
     InventoryService inventoryService;
     @Autowired
     AuditService auditService;
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Autowired
+    PaymentService paymentService;
+    @Autowired
+    RecommendationService recommendationService;
+   @Transactional(propagation = Propagation.REQUIRED)
     public Order saveOrder(Order order){
         System.out.println("Order transaction "+ TransactionSynchronizationManager.getCurrentTransactionName());
         System.out.println("Order transaction Active/NotActive "+ TransactionSynchronizationManager.isActualTransactionActive());
@@ -33,8 +37,21 @@ public class OrderService {
         order.setPrice(product.getPrice());
         Order placeOrder= orderRepo.save(order);
         auditService.getAuditDetails(placeOrder,"Order places successfully");
+        //supported
+        getCustomerDetails();
+        //mandatory one
+        paymentService.validatePayment(placeOrder);
+        //not supported
+        System.out.println(recommendationService.getAllInventoryList());
         return placeOrder;
     }
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public  void getCustomerDetails() {
+        System.out.println("getCustomerDetails transaction "+ TransactionSynchronizationManager.getCurrentTransactionName());
+        System.out.println("getCustomerDetails transaction Active/NotActive "+ TransactionSynchronizationManager.isActualTransactionActive());
+        System.out.println("Customer details fetched");
+    }
+
 
     private void validateProductAvailability(Order order, Inventory product) {
         if(order.getQuantity()> product.getQuantity()){
